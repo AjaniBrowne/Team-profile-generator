@@ -1,6 +1,9 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const Manager = require('./lib/Manager');
+const Intern = require('./lib/Intern');
+const Engineer = require('./lib/Engineer');
+const Employee = require('./lib/Employee');
 const teamArray = [];
 
 const workforce = ({Employee,Engineer,Intern,Manager}) => {
@@ -36,29 +39,91 @@ function createManager(){
         name:'Manager',
         },
         {
-            type: 'input',
-            message:'What is the managers id number?',
-            name:'Manager'
+        type: 'input',
+        message:'What is the managers id number?',
+        name:'Manager'
         },
         {
-            type: 'input',
-            message: 'What is the managers office number?',
-            name:'Manager',
+        type: 'input',
+        message: 'What is the managers office number?',
+        name:'Manager',
         },
         {
-            type: 'input',
-            message: 'What is the managers email address?',
-            name:'Manager',
+        type: 'input',
+        message: 'What is the managers email address?',
+        name:'Manager',
         },
     ]).then((answers) => {
         const manager = new Manager(answers);
-        console.log(manager)
+        console.log(manager);
+        teamArray.push(manager);
     });
+
 }
 
 function createTeam(){
     inquirer
     .prompt([
-        
-    ])
+        {
+          type: 'rawlist',
+          message: 'Please select employee type.',
+          name: 'role' ,
+          choices: ['Engineer','Intern']
+
+        },
+        {
+         type:'input',
+         message: 'Please enter your employees id.',
+         name: 'id',
+        },
+        {
+        type:'input',
+        message: 'Please enter the employee github url.',
+        name:'github'
+        },
+        {
+        type: 'input',
+        message: 'Please enter employee email.',
+        name: 'email',
+        },
+    ]).then((answers) => {
+        const engineer = new Engineer(answers);
+        console.log(engineer);
+        teamArray.push(engineer);
+        });
+    }
+
+function addIntern(){
+    inquirer
+    .prompt([
+        {
+        type: 'input',
+        message: 'Please enter interns name.',
+        name:  'name',  
+        },
+        {
+        type: 'input',
+        message: 'What school did the intern attend?',
+        name:'school',    
+        },    
+    ]).then((answers) => {
+        const intern = new Intern(answers);
+        console.log(intern);
+        teamArray.push(intern);
+    });
 }
+
+function buildTeam(){
+    inquirer
+    .prompt([{
+      type: 'rawlist',
+      message: 'Would you like to add more members to the team?' ,
+      choices:[Manager,Intern,Engineer,Employee],
+    }
+    ]).then((data) => {
+        const team = workforce(data);
+        fs.writeFile('index.html', team, (err) => err ? console.log(err) : console.log('Your team is made.'))
+    });
+}
+
+createManager()
