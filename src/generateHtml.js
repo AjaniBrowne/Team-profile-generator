@@ -15,10 +15,10 @@ const workforce = ({Employee,Engineer,Intern,Manager}) => {
     </nav>
 
     <div id="Cards">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
+        <span>${Manager}</span>
+        <span>${Employee}</span>
+        <span>${Intern}</span>
+        <span>${Engineer}</span>
     </div>
     
 </body>

@@ -122,7 +122,7 @@ function buildTeam(){
     }
     ]).then((createTeam) => {
         const team = workforce(data);
-        fs.writeFile('index.html', team, (err) => err ? console.log(err) : console.log('Your team is made.'))
+        fs.writeFile('./src/generateHtml.js', team, (err) => err ? console.log(err) : console.log('Your team is made.'))
     });
 };
 
