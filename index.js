@@ -120,10 +120,10 @@ function buildTeam(){
       message: 'Would you like to add more members to the team?' ,
       choices:[Manager,Intern,Engineer,Employee],
     }
-    ]).then((data) => {
+    ]).then((createTeam) => {
         const team = workforce(data);
         fs.writeFile('index.html', team, (err) => err ? console.log(err) : console.log('Your team is made.'))
     });
-}
+};
 
-createManager()
+createManager();
