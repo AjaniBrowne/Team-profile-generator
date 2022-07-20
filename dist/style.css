@@ -5,3 +5,13 @@
     border-style: double;
 };
 
+#Cards {
+   display:flex;
+   display: grid;
+   grid-auto-flow: column;
+   grid-column-gap: 10px;   
+};
+
+span{
+    margin: 10px;
+};
