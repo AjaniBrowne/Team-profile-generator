@@ -1,34 +1,36 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-const Manager = require('./lib/Manager');
-const Intern = require('./lib/Intern');
-const Engineer = require('./lib/Engineer');
-const Employee = require('./lib/Employee');
+const Manager = require('./lib/Manager.js');
+const Intern = require('./lib/Intern.js');
+const Engineer = require('./lib/Engineer.js');
+const Employee = require('./lib/Employee.js');
+const generateHtml = require('./src/generateHtml.js');
 const teamArray = [];
 
-const workforce = ({Employee,Engineer,Intern,Manager}) => {
-    return `
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
-    <title>Team Profile Generator</title>
-</head>
-<body>
-    <nav class="team" id="heading">
-        <h1>My Team</h1>
-    </nav>
+// const workforce = ({Employee,Engineer,Intern,Manager}) => {
+//     return `
+//     <!DOCTYPE html>
+// <html lang="en">
+// <head>
+//     <meta charset="UTF-8">
+//     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//     <link rel="stylesheet" href="./style.css">
+//     <title>Team Profile Generator</title>
+// </head>
+// <body>
+//     <nav class="team" id="heading">
+//         <h1>My Team</h1>
+//     </nav>
 
-    <div id="Cards">
+//     <div id="Cards">
         
-    </div>
+//     </div>
     
-</body>
-</html>`
-};
+// </body>
+// </html>`
+// };
+
 
 function createManager(){
     inquirer
@@ -36,22 +38,22 @@ function createManager(){
         {
         type: 'input',
         message:'Who is the manager?',
-        name:'Manager',
+        name:'name',
         },
         {
         type: 'input',
         message:'What is the managers id number?',
-        name:'Manager'
+        name:'id',
         },
         {
         type: 'input',
         message: 'What is the managers office number?',
-        name:'Manager',
+        name:'officeNumber',
         },
         {
         type: 'input',
         message: 'What is the managers email address?',
-        name:'Manager',
+        name:'email',
         },
     ]).then((answers) => {
         const manager = new Manager(answers);
@@ -72,14 +74,14 @@ function createTeam(){
 
         },
         {
+        type:'input',
+        message: 'Please enter your employees name.',
+        name: 'name',
+        },
+        {
          type:'input',
          message: 'Please enter your employees id.',
          name: 'id',
-        },
-        {
-        type:'input',
-        message: 'Please enter the employee github url.',
-        name:'github'
         },
         {
         type: 'input',
@@ -87,9 +89,9 @@ function createTeam(){
         name: 'email',
         },
     ]).then((answers) => {
-        const engineer = new Engineer(answers);
-        console.log(engineer);
-        teamArray.push(engineer);
+        const employee = new Employee(answers);
+        console.log(employee);
+        teamArray.push(employee);
         });
     }
 
@@ -103,6 +105,11 @@ function addIntern(){
         },
         {
         type: 'input',
+        message: 'Please enter the interns email',
+        name: 'email',
+        },
+        {
+        type: 'input',
         message: 'What school did the intern attend?',
         name:'school',    
         },    
@@ -113,17 +120,45 @@ function addIntern(){
     });
 }
 
+function addEngineer(){
+    inquirer
+    .prompt([
+        {
+            type:'input',
+            message: 'Please enter your engineers name.',
+            name: 'name',
+            },
+            {
+             type:'input',
+             message: 'Please enter your engineers id.',
+             name: 'id',
+            },
+            {
+            type: 'input',
+            message: 'Please enter engineers email.',
+            name: 'email',
+            },
+        {
+            type:'input',
+            message: 'Please enter the employee github url.',
+            name:'github'
+            },
+    ])
+}
+
 function buildTeam(){
     inquirer
     .prompt([{
       type: 'rawlist',
       message: 'Would you like to add more members to the team?' ,
-      choices:[Manager,Intern,Engineer,Employee],
+      choices:['Manager','Intern','Engineer','no'],
     }
     ]).then((createTeam) => {
         const team = workforce(data);
         fs.writeFile('./src/generateHtml.js', team, (err) => err ? console.log(err) : console.log('Your team is made.'))
     });
 };
+
+
 
 createManager();
