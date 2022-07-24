@@ -56,44 +56,13 @@ function createManager(){
         name:'email',
         },
     ]).then((answers) => {
-        const manager = new Manager(answers);
+        const manager = new Manager(answers.name,answers.id,answers.email,answers.officeNumber);
         console.log(manager);
         teamArray.push(manager);
+        buildTeam();
     });
 
 }
-
-function createTeam(){
-    inquirer
-    .prompt([
-        {
-          type: 'rawlist',
-          message: 'Please select employee type.',
-          name: 'role' ,
-          choices: ['Engineer','Intern']
-
-        },
-        {
-        type:'input',
-        message: 'Please enter your employees name.',
-        name: 'name',
-        },
-        {
-         type:'input',
-         message: 'Please enter your employees id.',
-         name: 'id',
-        },
-        {
-        type: 'input',
-        message: 'Please enter employee email.',
-        name: 'email',
-        },
-    ]).then((answers) => {
-        const employee = new Employee(answers);
-        console.log(employee);
-        teamArray.push(employee);
-        });
-    }
 
 function addIntern(){
     inquirer
@@ -112,11 +81,17 @@ function addIntern(){
         type: 'input',
         message: 'What school did the intern attend?',
         name:'school',    
-        },    
+        }, 
+        {
+            type: 'input',
+            message: 'Please enter the id number',
+            name: 'id',
+        }   
     ]).then((answers) => {
-        const intern = new Intern(answers);
+        const intern = new Intern(answers.name,answers.id,answers.email,answers.school);
         console.log(intern);
         teamArray.push(intern);
+        buildTeam();
     });
 }
 
@@ -143,7 +118,12 @@ function addEngineer(){
             message: 'Please enter the employee github url.',
             name:'github'
             },
-    ])
+    ]).then((answers) => {
+        const engineer = new Engineer(answers.name,answers.id,answers.email,answers.github);
+        console.log(engineer);
+        teamArray.push(engineer);
+        buildTeam();
+    })
 }
 
 function buildTeam(){
@@ -152,10 +132,19 @@ function buildTeam(){
       type: 'rawlist',
       message: 'Would you like to add more members to the team?' ,
       choices:['Manager','Intern','Engineer','no'],
+      name: "positions"
     }
-    ]).then((createTeam) => {
-        const team = workforce(data);
-        fs.writeFile('./src/generateHtml.js', team, (err) => err ? console.log(err) : console.log('Your team is made.'))
+    ]).then((createTeam) => { 
+        if(createTeam.positions == "Manager"){
+            createManager()
+        }else if(createTeam.positions == "Intern"){
+            addIntern()
+        }else if(createTeam.positions == "Engineer"){
+            addEngineer()
+        }else{
+            const team = generateHtml(teamArray);
+        fs.writeFile('./src/teamHtml.html', team, (err) => err ? console.log(err) : console.log('Your team is made.'))
+        }
     });
 };
 
